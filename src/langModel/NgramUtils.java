@@ -20,9 +20,8 @@ public class NgramUtils {
 	 * @return the number of words of the given sequence.
 	 */
 	public static int getSequenceSize (String sequence) {
-		String[] decoupe = sequence.split("\\s+");
-		return decoupe.length;
-		//test
+		String[] decoupe = sequence.split("\\s+"); // Decoupe sequence dans un tableau
+		return decoupe.length; // Retourne la taille du tableau decoupe
 	}
 
 
@@ -44,14 +43,15 @@ public class NgramUtils {
 		if (order==1)
 			return "";
 
-		String[] ngramTab = ngram.split(" ");
-		String ret[] = new String[ngramTab.length];
-		int indexRet = 0;
-		for (int i = ngramTab.length-order+1; i<ngramTab.length-1;i++ ) {
-		    ret[indexRet] = ngramTab[i];
+		String[] ngramTab = ngram.split("\\s+"); // On decoupe le ngram dans un tableau
+		String historique[] = new String[order-1];
+		int indexHist = 0;
+		// On parcourt le Ngramme a partir des mots a prendre.
+		for (int i = ngramTab.length-order; i<ngramTab.length-1;i++ ) {
+		    historique[indexHist] = ngramTab[i];
+		    indexHist++;
         }
-
-		return String.join(" ", ret);
+		return String.join(" ", historique);
 	}
 
 
