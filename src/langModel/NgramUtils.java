@@ -22,6 +22,7 @@ public class NgramUtils {
 	public static int getSequenceSize (String sequence) {
 		String[] decoupe = sequence.split("\\s+");
 		return decoupe.length;
+		//test
 	}
 
 
