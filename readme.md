@@ -8,3 +8,7 @@ NGramUtils : contient des fonctions utiles pour s'occuper des Ngrammes
 
 NGramUtils : Alper
 NGramUtilsTest : Eliott
+
+## Exercice 4
+NGramCount : Eliott
+NGramCountTest : Alper

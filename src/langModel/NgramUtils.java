@@ -1,6 +1,9 @@
 package langModel;
 
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -71,8 +74,26 @@ public class NgramUtils {
 	 * @return the list of n-grams constructed from the sentence.
 	 */
 	public static List<String> decomposeIntoNgrams (String sentence, int order) {
-		//TODO
-		return null;
+		// On decompose la phrase dans un tableau de String
+		String[] tabSentence = sentence.split("\\s+");
+
+		// On cree la liste des ngrammes a retourner selon l'ordre
+		List<String> ngramList = new ArrayList<>();
+		int posj;
+
+		// On parcourt le tableau contenant la phrase
+		for(int i = 1; i <= tabSentence.length; i++) {
+			// On regarde les mots avant
+			posj = 1;
+			for (int j = i-(order); j<=i; j++) {
+				if (!(j<0)) {
+					posj=j;
+					break;
+				}
+			}
+			ngramList.add(String.join(" ", Arrays.copyOfRange(tabSentence,posj, i))); // On ajoute les mots
+		}
+		return ngramList;
 	}
 
 
@@ -103,8 +124,26 @@ public class NgramUtils {
 	 * @return a list of generated n-grams from the sentence.
 	 */
 	public static List<String> generateNgrams (String sentence, int minOrder, int maxOrder) {
-		//TODO
-		return null;
+		// initialize list of ngrams
+		String[] parsedSentence = sentence.split("\\s+"); // On parse la phrase dans un tableau pour avoir les mots individuellement (initialize ngram string parsedSentence)
+		List<String> ngrams = new ArrayList<>(); // Grosse liste contenant tous les ngrammes
+		String subNgrams = "";
+
+		//for n = minOrder to maxOrder (for each order)
+		for (int n = minOrder; n<=maxOrder; n++) {
+			//for i = 0 to sentence.length-n (parse the whole sentence)
+			for (int i = 0; i<=parsedSentence.length-n; i++) {
+				// for j = i to i+n-1 (create a ngram made of the following sequence of words starting from i to i + the order size)
+				for (int j = i; j<i+n; j++) {
+					// ngram = ngram + " " + sentence[j]
+					subNgrams = subNgrams + " " + parsedSentence[j];
+				}
+				// add ngramm to list ngrams
+				ngrams.add(subNgrams.trim());
+				subNgrams = "";
+			}
+		}
+		return ngrams;
 	}
 
 	/**
@@ -116,8 +155,14 @@ public class NgramUtils {
 	 * @return the sequence of words with OOV tags according to the vocabulary.
 	 */
 	public static String getStringOOV(String s, VocabularyInterface vocab) {
-		//TODO
-		return "";
+	    String[] tabS = s.split("\\s+");
+
+	    for (int i = 0; i<tabS.length; i++) {
+	        if (!vocab.contains(tabS[i])) {
+	            tabS[i] = vocab.OOV_TAG;
+            }
+        }
+		return String.join(" ", tabS);
 	}
 
 }
