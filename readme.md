@@ -11,4 +11,12 @@ NGramUtilsTest : Eliott
 
 ## Exercice 4
 NGramCount : Eliott
-NGramCountTest : Alper
+NGramCountTest : Alper En cours
+
+## Exercice 5
+NaiveLanguageModel : Eliott
+NaiveLanguageModelTest : Alper En cours
+
+## Exercice 6
+LaplaceLanguageModel : Eliott
+LaPlaceLanguageModelTest : Alper En cours

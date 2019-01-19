@@ -1,10 +1,7 @@
 package langModel;
 
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -36,7 +33,9 @@ public class NgramCounts implements NgramCountsInterface {
 	 * Constructor.
 	 */
 	public NgramCounts(){
-		//TODO
+		this.order = 0;
+		this.ngramCounts = new HashMap<>();
+		this.nbWordsTotal = 0;
 	}
 
 
@@ -49,72 +48,105 @@ public class NgramCounts implements NgramCountsInterface {
 	 * @param order the maximal order of n-grams considered.
 	 */
 	private void setMaximalOrder (int order) {
-		// TODO Auto-generated method stub
+		this.order = order;
 	}
 
 	
 	@Override
 	public int getMaximalOrder() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.order;
 	}
 
 	
 	@Override
 	public int getNgramCounterSize() {
-		// TODO Auto-generated method stub
-		return 0;
+		return ngramCounts.size();
 	}
 
 	
 	@Override
 	public int getTotalWordNumber(){
-		// TODO Auto-generated method stub
-		return 0;
+		return nbWordsTotal;
 	}
 	
 	
 	@Override
 	public Set<String> getNgrams() {
-		// TODO Auto-generated method stub
-		return null;
+		Set res = ngramCounts.keySet();
+		return res;
 	}
 
 	
 	@Override
 	public int getCounts(String ngram) {
-		// TODO Auto-generated method stub
-		return 0;
+		return ngramCounts.get(ngram);
 	}
 	
 
 	@Override
 	public void incCounts(String ngram) {
-		// TODO Auto-generated method stub
+		int tmp;
+	    if (ngramCounts.containsKey(ngram)){
+            tmp = ngramCounts.get(ngram)+1;
+		    ngramCounts.put(ngram, tmp);
+        } else {
+            ngramCounts.put(ngram,1);
+        }
 	}
 
 	
 	@Override
 	public void setCounts(String ngram, int counts) {
-		// TODO Auto-generated method stub
+		ngramCounts.put(ngram,counts);
 	}
 
 
 	@Override
 	public void scanTextFile(String filePath, VocabularyInterface vocab, int maximalOrder) {
-		// TODO Auto-generated method stub
+        List<String> mots;
+        mots = MiscUtils.readTextFileAsStringList(filePath);
+        String lesmots = "";
+        for (String mot: mots) {
+            if (vocab.getWords().contains(mot)){
+                lesmots += mot+" ";
+            } else {
+                lesmots+= Vocabulary.OOV_TAG+" ";
+            }
+            nbWordsTotal += 1;
+        }
+        NgramUtils ngu = new NgramUtils();
+        mots = ngu.generateNgrams(lesmots,1,maximalOrder);
+        for (String mot: mots) {
+           this.incCounts(mot);
+        }
+        this.order = maximalOrder;
 	}
 
 	
 	@Override
 	public void writeNgramCountFile(String filePath) {
-		// TODO Auto-generated method stub
+        for (String key : ngramCounts.keySet()) {
+            MiscUtils.writeFile(key +"\t"+ngramCounts.get(key), filePath, true);
+        }
 	}
 
 	
 	@Override
 	public void readNgramCountsFile(String filePath) {
-		// TODO Auto-generated method stub
+        List<String> mots = MiscUtils.readTextFileAsStringList(filePath);
+        String[] couple;
+        String[] nbngrams;
+	    for (String mot: mots) {
+	       couple =  mot.split("\\t");
+	       this.setCounts(couple[0], Integer.parseInt(couple[1]));
+	       nbngrams = couple[0].split("\\s");
+	       if (nbngrams.length == 1){
+               this.nbWordsTotal += Integer.parseInt(couple[1]);
+           }
+           if (nbngrams.length > this.order) {
+	           this.order = nbngrams.length;
+           }
+        }
 	}
 
 }
